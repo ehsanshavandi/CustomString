@@ -6,17 +6,22 @@
 #include <string>
 using namespace std;
 
-class CustomString : public string {
+class CustomString {
  public:
   explicit CustomString(char const* cStr) : m_data(cStr) {}
-  explicit CustomString(string& str) : m_data(str) {}
+  explicit CustomString(const string& str) : m_data(str) {}
+
+  static string toLowerCase(const string& str);
+  string toLowerCase();
+  static string toUpperCase(const string& str);
+  string toUpperCase();
+
+  void append(const std::string& str);
+  size_t length() const;
+
+  char& operator[](size_t index);
 
   string data() const;
-
-  static string toLowerCase(string& str);
-  string toLowerCase();
-  static string toUpperCase(string& str);
-  string toUpperCase();
 
  private:
   string m_data;
@@ -55,3 +60,9 @@ string CustomString::toUpperCase() {
 
   return tmp;
 }
+
+inline void CustomString::append(const string& str) { m_data += str; }
+
+inline size_t CustomString::length() const { return m_data.length(); }
+
+inline char& CustomString::operator[](size_t index) { return m_data[index]; }
