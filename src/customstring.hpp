@@ -80,7 +80,7 @@ class CustomString {
 
 inline string CustomString::data() const { return m_data; }
 
-string CustomString::toLowerCase(string& str) {
+string CustomString::toLowerCase(const string& str) {
   string tmp;
   transform(str.begin(), str.end(), back_inserter<string>(tmp),
             [](unsigned char c) { return std::tolower(c); });
@@ -88,7 +88,7 @@ string CustomString::toLowerCase(string& str) {
   return tmp;
 }
 
-inline string CustomString::toLowerCase() {
+string CustomString::toLowerCase() {
   string tmp;
   transform(m_data.begin(), m_data.end(), back_inserter<string>(tmp),
             [](unsigned char c) { return std::tolower(c); });
@@ -96,7 +96,7 @@ inline string CustomString::toLowerCase() {
   return tmp;
 }
 
-inline string CustomString::toUpperCase(string& str) {
+string CustomString::toUpperCase(const string& str) {
   string tmp;
   transform(str.begin(), str.end(), back_inserter<string>(tmp),
             [](unsigned char c) { return std::toupper(c); });
