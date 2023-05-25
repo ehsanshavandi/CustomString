@@ -28,6 +28,7 @@ class CustomString {
   explicit CustomString(const string& str) : m_data(str) {}
 
   /**
+   * @static
    * @brief toLowerCase
    * @param str a const string& str
    * @return std::string
@@ -39,6 +40,7 @@ class CustomString {
    */
   string toLowerCase();
   /**
+   * @static
    * @brief toUpperCase
    * @param str a const string&
    * @return std::string
