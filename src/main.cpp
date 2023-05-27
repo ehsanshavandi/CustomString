@@ -15,6 +15,24 @@ int main()
     string exUpper = csExample.toUpperCase();
     csExample.replace("Ehsan", "Ali");
     cout << csExample.data() << endl;
+
+    CustomString dna("GATATATACAGGTACCCAATTTACAGATACAAATTTTAAGGAAGAGATATACACACA");
+    //    size_t posFound = dna.oldFind("GATACA");
+    //    if (posFound != string::npos)
+    //    {
+    //        cout << "Found at " << posFound << endl;
+    //    }
+
+    CustomString name("can i match my name Ehsan");
+    //    posFound = name.oldFindIgnorCase("ehsan");
+    //    if (posFound != string::npos)
+    //        cout << "Found at " << posFound << endl;
+    size_t posFound = dna.findBoyer("GATACA");
+    if (posFound != string::npos)
+    {
+        cout << "Found at " << posFound << endl;
+    }
+
     //    cout << exLower << endl;
     //    cout << exUpper << endl;
     //    //    stringstream ss;

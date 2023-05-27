@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <exception>
+#include <functional>
 #include <iostream>
 #include <regex>
 #include <string>
@@ -86,10 +87,48 @@ public:
      * @param str1 a const char*
      * @param str2 a const char*
      */
-    void replace(const char* str1, const char* str2) noexcept(false);
+    void replace(const string& str1, const string& str2);
+
+    /**
+     * @brief oldFind
+     * @param str is const string&
+     * @return position which found
+     */
+    std::size_t oldFind(const string& str);
+    /**
+     * @brief oldFindIgnorCase
+     * @param str is a const string&
+     * @return position which found
+     */
+    std::size_t oldFindIgnorCase(const string& str);
+    /**
+     * @brief findBoyer
+     * boyer moor horsepol algorithm is used
+     * @param str is a const string&
+     * @return position which found
+     */
+    std::size_t findBoyer(const string& str);
 
 private:
     string m_data; /**< std::string */
+
+    /**
+     * @brief m_srearchString a private member funtion
+     * which used for searching character by character
+     * @param ref is a main string
+     * @param str is a wanted string
+     * @param pred predicte function
+     * @return std::string::const_iterator
+     */
+    std::string::const_iterator m_srearchString(const string& ref,
+        const string& str,
+        function<bool(unsigned char, unsigned char)> pred = std::equal_to<unsigned char>());
+
+    /**
+     * @brief predicate function for searching in string case insensitively
+     */
+    std::function<bool(unsigned char, unsigned char)> m_equal_iggnore_case =
+        [](unsigned char rc, unsigned char sc) -> bool { return tolower(rc) == tolower(sc); };
 };
 
 inline string CustomString::data() const
@@ -141,13 +180,45 @@ string CustomString::toUpperCase()
     return tmp;
 }
 
-void CustomString::replace(const char* str1, const char* str2)
+void CustomString::replace(const string& str1, const string& str2)
 {
     size_t pos = m_data.find(str1);
     if (pos != string::npos)
         m_data.replace(pos, string(str1).length(), str2);
+}
+
+std::size_t CustomString::oldFind(const string& str)
+{
+    std::string::const_iterator it = m_srearchString(m_data, str);
+    if (it != m_data.end())
+        return std::distance(m_data.cbegin(), it);
     else
-        throw runtime_error(string("Not Found ") + string(str1));
+        return std::string::npos;
+}
+
+inline size_t CustomString::oldFindIgnorCase(const string& str)
+{
+    std::string::const_iterator it = m_srearchString(m_data, str, m_equal_iggnore_case);
+    if (it != m_data.end())
+        return std::distance(m_data.cbegin(), it);
+    else
+        return std::string::npos;
+}
+
+size_t CustomString::findBoyer(const string& str)
+{
+    auto it = std::search(
+        m_data.begin(), m_data.end(), std::boyer_moore_horspool_searcher(str.begin(), str.end()));
+    if (it != m_data.end())
+        return std::distance(m_data.begin(), it);
+    else
+        return std::string::npos;
+}
+
+std::string::const_iterator CustomString::m_srearchString(
+    const string& ref, const string& str, function<bool(unsigned char, unsigned char)> pred)
+{
+    return search(ref.begin(), ref.end(), str.begin(), str.end(), pred);
 }
 
 inline void CustomString::append(const string& str)
