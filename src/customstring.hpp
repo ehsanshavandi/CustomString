@@ -195,7 +195,7 @@ std::size_t CustomString::oldFind(const std::string& str)
         return std::string::npos;
 }
 
-inline size_t CustomString::oldFindIgnorCase(const std::string& str)
+size_t CustomString::oldFindIgnorCase(const std::string& str)
 {
     std::string::const_iterator it = m_srearchString(m_data, str, m_equal_iggnore_case);
     if (it != m_data.end())
