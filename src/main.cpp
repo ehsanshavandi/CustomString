@@ -10,11 +10,13 @@ using namespace std;
 int main()
 {
     //  string example = "Ehsan SHaavnadi HellO";
-    CustomString csExample("Ehsan Shavandi");
+    CustomString csExample("Ehsan Shavandi Ehsan");
     string exLower = csExample.toLowerCase();
     string exUpper = csExample.toUpperCase();
-    csExample.replace("Ehsan", "Ali");
-    cout << csExample.data() << endl;
+    //    csExample.replaceAll("Ehsan", "Ali");
+    //    csExample.replaceIgnCase("ehSan", "Ali");
+    csExample.replaceAllIgnCase("ehSan", "Ali");
+    //    cout << csExample.data() << endl;
 
     CustomString dna("GATATATACAGGTACCCAATTTACAGATACAAATTTTAAGGAAGAGATATACACACA");
     //    size_t posFound = dna.oldFind("GATACA");
@@ -28,11 +30,25 @@ int main()
     //    if (posFound != string::npos)
     //        cout << "Found at " << posFound << endl;
     size_t posFound = dna.findBoyer("GATACA");
-    if (posFound != string::npos)
-    {
-        cout << "Found at " << posFound << endl;
-    }
+    //    if (posFound != string::npos)
+    //    {
+    //        cout << "Found at " << posFound << endl;
+    //    }
 
+    // REGEX
+    CustomString example(
+        "Meanwhile LLVM has released apt 09121234567 packages for LLVM 13 and 14 "
+        "but "
+        "out-of-the 0912-123-4567 box clang-format-13, 0912 123 4567 clang-tidy-13, ... are "
+        "not available "
+        "via apt-get install clang-format-13.How 0912 1111111 can I install clang-format-13 "
+        "on Ubuntu 0912-1234567 18.04?");
+
+    std::regex mobilePattern(
+        R"delim(\d{11}|\d{4}[\s,-]\d{3}[\s,-]\d{4}|\d{4}[\s,-]\d{7})delim");	// matches words
+
+    vector<string> foundsAll = example.findPattern(mobilePattern);
+    for_each(foundsAll.begin(), foundsAll.end(), [](const string& item) { cout << item << endl; });
     //    cout << exLower << endl;
     //    cout << exUpper << endl;
     //    //    stringstream ss;

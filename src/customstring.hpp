@@ -1,9 +1,10 @@
 // CustomString.hpp
 
 #include <algorithm>
-#include <exception>
+#include <cctype>
 #include <functional>
 #include <iostream>
+#include <iterator>
 #include <regex>
 #include <string>
 
@@ -83,10 +84,28 @@ public:
 
     /**
      * @brief replace
-     * @param str1 a const char*
-     * @param str2 a const char*
+     * @param oldStr a const string&
+     * @param newStr a const string&
      */
-    void replace(const std::string& str1, const std::string& str2);
+    void replace(const std::string& oldStr, const std::string& newStr);
+    /**
+     * @brief replaceAll
+     * @param oldStr a const string&
+     * @param newStr a const string&
+     */
+    void replaceAll(const std::string& oldStr, const std::string& newStr);
+    /**
+     * @brief replaceIgnCase
+     * @param oldStr a const string&
+     * @param newStr a const string&
+     */
+    void replaceIgnCase(const std::string& oldStr, const std::string& newStr);
+    /**
+     * @brief replaceAllIgnCase
+     * @param oldStr a const string&
+     * @param newStr a const string&
+     */
+    void replaceAllIgnCase(const std::string& oldStr, const std::string& newStr);
 
     /**
      * @brief oldFind
@@ -107,6 +126,12 @@ public:
      * @return position which found
      */
     std::size_t findBoyer(const std::string& str);
+    /**
+     * @brief findPattern
+     * @param pattern const std::regex& that is Raw-string
+     * @return  std::vector<std::string>
+     */
+    std::vector<std::string> findPattern(const std::regex& pattern);
 
 private:
     std::string m_data; /**< std::string */
@@ -179,11 +204,52 @@ std::string CustomString::toUpperCase()
     return tmp;
 }
 
-void CustomString::replace(const std::string& str1, const std::string& str2)
+void CustomString::replace(const std::string& oldStr, const std::string& newStr)
 {
-    size_t pos = m_data.find(str1);
+    size_t pos = m_data.find(oldStr);
     if (pos != std::string::npos)
-        m_data.replace(pos, std::string(str1).length(), str2);
+        m_data.replace(pos, std::string(oldStr).length(), newStr);
+}
+
+void CustomString::replaceAll(const std::string& oldStr, const std::string& newStr)
+{
+    size_t pos = 0;
+    while (pos != m_data.length() - 1)
+    {
+        pos = m_data.find(oldStr);
+        if (pos != std::string::npos)
+        {
+            auto needleLen = std::string(oldStr).length();
+            m_data.replace(pos, needleLen, newStr);
+            pos += needleLen;
+        }
+        else
+            break;
+    }
+}
+
+void CustomString::replaceIgnCase(const std::string& oldStr, const std::string& newStr)
+{
+    size_t pos = this->oldFindIgnorCase(oldStr);
+    if (pos != std::string::npos)
+        m_data.replace(pos, std::string(oldStr).length(), newStr);
+}
+
+inline void CustomString::replaceAllIgnCase(const std::string& oldStr, const std::string& newStr)
+{
+    size_t pos = 0;
+    while (pos != m_data.length() - 1)
+    {
+        pos = this->oldFindIgnorCase(oldStr);
+        if (pos != std::string::npos)
+        {
+            auto needleLen = std::string(oldStr).length();
+            m_data.replace(pos, needleLen, newStr);
+            pos += needleLen;
+        }
+        else
+            break;
+    }
 }
 
 std::size_t CustomString::oldFind(const std::string& str)
@@ -212,6 +278,20 @@ size_t CustomString::findBoyer(const std::string& str)
         return std::distance(m_data.begin(), it);
     else
         return std::string::npos;
+}
+
+std::vector<std::string> CustomString::findPattern(const std::regex& pattern)
+{
+    std::vector<std::string> founds;
+    std::string tmp = m_data;
+    std::smatch matcher;
+    while (regex_search(tmp, matcher, pattern))
+    {
+        for (auto found : matcher)
+            founds.push_back(found);
+        tmp = matcher.suffix().str();
+    }
+    return founds;
 }
 
 std::string::const_iterator CustomString::m_srearchString(const std::string& ref,
