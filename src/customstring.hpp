@@ -6,7 +6,6 @@
 #include <iostream>
 #include <regex>
 #include <string>
-using namespace std;
 
 class CustomString
 {
@@ -30,7 +29,7 @@ public:
      * A constructor for standard string in STL
      * @param str a const string&
      */
-    explicit CustomString(const string& str) : m_data(str)
+    explicit CustomString(const std::string& str) : m_data(str)
     {
     }
     /**
@@ -55,7 +54,7 @@ public:
      * @brief data
      * @return std::string
      */
-    string data() const;
+    std::string data() const;
 
     /**
      * @static
@@ -63,54 +62,54 @@ public:
      * @param str a const string& str
      * @return std::string
      */
-    static string toLowerCase(const string& str);
+    static std::string toLowerCase(const std::string& str);
     /**
      * @brief toLowerCase
      * @return std::string
      */
-    string toLowerCase();
+    std::string toLowerCase();
     /**
      * @static
      * @brief toUpperCase
      * @param str a const string&
      * @return std::string
      */
-    static string toUpperCase(const string& str);
+    static std::string toUpperCase(const std::string& str);
     /**
      * @brief toUpperCase
      * @return std::string
      */
-    string toUpperCase();
+    std::string toUpperCase();
 
     /**
      * @brief replace
      * @param str1 a const char*
      * @param str2 a const char*
      */
-    void replace(const string& str1, const string& str2);
+    void replace(const std::string& str1, const std::string& str2);
 
     /**
      * @brief oldFind
      * @param str is const string&
      * @return position which found
      */
-    std::size_t oldFind(const string& str);
+    std::size_t oldFind(const std::string& str);
     /**
      * @brief oldFindIgnorCase
      * @param str is a const string&
      * @return position which found
      */
-    std::size_t oldFindIgnorCase(const string& str);
+    std::size_t oldFindIgnorCase(const std::string& str);
     /**
      * @brief findBoyer
      * boyer moor horsepol algorithm is used
      * @param str is a const string&
      * @return position which found
      */
-    std::size_t findBoyer(const string& str);
+    std::size_t findBoyer(const std::string& str);
 
 private:
-    string m_data; /**< std::string */
+    std::string m_data; /**< std::string */
 
     /**
      * @brief m_srearchString a private member funtion
@@ -120,9 +119,9 @@ private:
      * @param pred predicte function
      * @return std::string::const_iterator
      */
-    std::string::const_iterator m_srearchString(const string& ref,
-        const string& str,
-        function<bool(unsigned char, unsigned char)> pred = std::equal_to<unsigned char>());
+    std::string::const_iterator m_srearchString(const std::string& ref,
+        const std::string& str,
+        std::function<bool(unsigned char, unsigned char)> pred = std::equal_to<unsigned char>());
 
     /**
      * @brief predicate function for searching in string case insensitively
@@ -131,63 +130,63 @@ private:
         [](unsigned char rc, unsigned char sc) -> bool { return tolower(rc) == tolower(sc); };
 };
 
-inline string CustomString::data() const
+inline std::string CustomString::data() const
 {
     return m_data;
 }
 
-string CustomString::toLowerCase(const string& str)
+std::string CustomString::toLowerCase(const std::string& str)
 {
-    string tmp;
+    std::string tmp;
     transform(str.begin(),
         str.end(),
-        back_inserter<string>(tmp),
+        std::back_inserter<std::string>(tmp),
         [](unsigned char c) { return std::tolower(c); });
 
     return tmp;
 }
 
-string CustomString::toLowerCase()
+std::string CustomString::toLowerCase()
 {
-    string tmp;
+    std::string tmp;
     transform(m_data.begin(),
         m_data.end(),
-        back_inserter<string>(tmp),
+        std::back_inserter<std::string>(tmp),
         [](unsigned char c) { return std::tolower(c); });
 
     return tmp;
 }
 
-string CustomString::toUpperCase(const string& str)
+std::string CustomString::toUpperCase(const std::string& str)
 {
-    string tmp;
+    std::string tmp;
     transform(str.begin(),
         str.end(),
-        back_inserter<string>(tmp),
+        std::back_inserter<std::string>(tmp),
         [](unsigned char c) { return std::toupper(c); });
 
     return tmp;
 }
 
-string CustomString::toUpperCase()
+std::string CustomString::toUpperCase()
 {
-    string tmp;
+    std::string tmp;
     transform(m_data.begin(),
         m_data.end(),
-        back_inserter<string>(tmp),
+        std::back_inserter<std::string>(tmp),
         [](unsigned char c) { return std::toupper(c); });
 
     return tmp;
 }
 
-void CustomString::replace(const string& str1, const string& str2)
+void CustomString::replace(const std::string& str1, const std::string& str2)
 {
     size_t pos = m_data.find(str1);
-    if (pos != string::npos)
-        m_data.replace(pos, string(str1).length(), str2);
+    if (pos != std::string::npos)
+        m_data.replace(pos, std::string(str1).length(), str2);
 }
 
-std::size_t CustomString::oldFind(const string& str)
+std::size_t CustomString::oldFind(const std::string& str)
 {
     std::string::const_iterator it = m_srearchString(m_data, str);
     if (it != m_data.end())
@@ -196,7 +195,7 @@ std::size_t CustomString::oldFind(const string& str)
         return std::string::npos;
 }
 
-inline size_t CustomString::oldFindIgnorCase(const string& str)
+inline size_t CustomString::oldFindIgnorCase(const std::string& str)
 {
     std::string::const_iterator it = m_srearchString(m_data, str, m_equal_iggnore_case);
     if (it != m_data.end())
@@ -205,7 +204,7 @@ inline size_t CustomString::oldFindIgnorCase(const string& str)
         return std::string::npos;
 }
 
-size_t CustomString::findBoyer(const string& str)
+size_t CustomString::findBoyer(const std::string& str)
 {
     auto it = std::search(
         m_data.begin(), m_data.end(), std::boyer_moore_horspool_searcher(str.begin(), str.end()));
@@ -215,13 +214,14 @@ size_t CustomString::findBoyer(const string& str)
         return std::string::npos;
 }
 
-std::string::const_iterator CustomString::m_srearchString(
-    const string& ref, const string& str, function<bool(unsigned char, unsigned char)> pred)
+std::string::const_iterator CustomString::m_srearchString(const std::string& ref,
+    const std::string& str,
+    std::function<bool(unsigned char, unsigned char)> pred)
 {
     return search(ref.begin(), ref.end(), str.begin(), str.end(), pred);
 }
 
-inline void CustomString::append(const string& str)
+inline void CustomString::append(const std::string& str)
 {
     m_data += str;
 }
