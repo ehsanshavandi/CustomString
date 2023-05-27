@@ -235,7 +235,7 @@ void CustomString::replaceIgnCase(const std::string& oldStr, const std::string& 
         m_data.replace(pos, std::string(oldStr).length(), newStr);
 }
 
-inline void CustomString::replaceAllIgnCase(const std::string& oldStr, const std::string& newStr)
+void CustomString::replaceAllIgnCase(const std::string& oldStr, const std::string& newStr)
 {
     size_t pos = 0;
     while (pos != m_data.length() - 1)
